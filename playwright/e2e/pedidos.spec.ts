@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 test('deve consultar um pedido aprovado', async ({ page }) => {
+
+
+  //test data 
+  const order = "VLO-YFR4K2"
+  
   //Arrange
     await page.goto('http://localhost:5173/');
     await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
@@ -9,13 +14,17 @@ test('deve consultar um pedido aprovado', async ({ page }) => {
   
     //Act
 
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill('VLO-YFR4K2');
+    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
     await page.getByRole('button', { name: 'Buscar Pedido' }).click();
   
   //Assert
+  const  orderId = page.getByRole('paragraph')
+    .filter({ hasText: /^Pedido$/ })
+    .locator('..') // Sobe para o elemento pai (a div que agrupa ambos)
+
+  await expect(orderId).toContainText(order, {timeout: 10_000});
 
 
-  await expect(page.getByText('VLO-YFR4K2')).toBeVisible({timeout: 10_000});
   await expect(page.getByText('APROVADO')).toBeVisible
 
 
