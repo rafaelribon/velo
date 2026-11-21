@@ -1,4 +1,4 @@
-import { test } from '../support/fixtures'
+import { test, expect } from '../support/fixtures'
 import { generateOrderCode } from '../support/helpers'
 import { type OrderDetails } from '../support/actions/orderLockupActions'
 
@@ -84,5 +84,15 @@ test('deve exibir mensagem quando o pedido esta fora do padrão', async ({ app }
   await app.orderLockup.validateOrderNotFound()
 })
 
+test('deve manter o botão de buscar desabilitado quando o campo está vazio ou preenchido com espacos', async ({ page , app }) => {
+  const button = app.orderLockup.elements.searchButton
+
+  await expect(button).toBeDisabled()
+
+  await app.orderLockup.elements.orderInput.fill('   ')
+
+  await expect(button).toBeDisabled()
+
 })
 
+})
